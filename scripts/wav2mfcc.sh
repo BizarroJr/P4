@@ -29,17 +29,17 @@ if [[ $UBUNTU_SPTK == 1 ]]; then
    X2X="sptk x2x"
    FRAME="sptk frame"
    WINDOW="sptk window"
-   MFC="sptk mfc"
+   MFC="sptk mfcc"
 else
    # or install SPTK building it from its source
    X2X="x2x"
    FRAME="frame"
    WINDOW="window"
-   MFC="mfc"
+   MFC="mfcc"
 fi
 
 # Main command for feature extration
-sox $inputfile -t raw - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+sox $inputfile -t raw -| $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
 	$MFC -l 240 -m $mfcc_order -s 8 -n 20 > $base.mfcc
 
 # Our array files need a header with the number of cols and rows:
