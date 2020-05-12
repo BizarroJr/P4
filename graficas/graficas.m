@@ -7,7 +7,7 @@ close all;
 %% Lectura de los .txt a matrices
 
 lp = readmatrix('lp_2_3.txt');
-lpcc = readmatrix('lpcc_2_3.txt');
+lpcc = readmatrix('lpcc_2_3yy.txt');
 mfcc = readmatrix('mfcc_2_3.txt');
 lp10 = readmatrix('lp10_2_3.txt');
 lpcc10 = readmatrix('lpcc10_2_3.txt');

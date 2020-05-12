@@ -96,7 +96,7 @@ compute_lp() {
 compute_lpcc() {
     for filename in $(cat $lists/class/all.train $lists/class/all.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2lpcc 8 8 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2lpcc 13 13 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -104,7 +104,7 @@ compute_lpcc() {
 compute_mfcc() {
     for filename in $(cat $lists/class/all.train $lists/class/all.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 20 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 13 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -134,10 +134,13 @@ for cmd in $*; do
        ## @file
 	   # \TODO
 	   # Select (or change) good parameters for gmm_train
+       # \HECHO --> -m (numero de Gaussianas) ha pasado de 1 a 10
+       #            -N (numero de iteraciones) ha pasado de 5 a 20 (def)
+       #            -i (inicialización) 0=random, 1=VQ, 2=EM split
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 0.001 -N5 -m 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.001 -N20 -m 10 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -157,20 +160,28 @@ for cmd in $*; do
    elif [[ $cmd == trainworld ]]; then
        ## @file
 	   # \TODO
+       # \HECHO 
 	   # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
 	   #
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
-       echo "Implement the trainworld option ..."
+       # echo "Implement the trainworld option ..."
+
+        gmm_train  -v 1 -T 0.001 -N 20 -m 10 -i 1 -e $FEAT -d $w/$FEAT -g $w/gmm/$FEAT/world.gmm $lists/verif/users_and_others.train  || exit 1
+
    elif [[ $cmd == verify ]]; then
        ## @file
 	   # \TODO 
+       # \HECHO 
 	   # Implement 'verify' in order to perform speaker verification
 	   #
 	   # - The standard output of gmm_verify must be redirected to file $w/verif_${FEAT}_${name_exp}.log.
 	   #   For instance:
 	   #   * <code> gmm_verify ... > $w/verif_${FEAT}_${name_exp}.log </code>
 	   #   * <code> gmm_verify ... | tee $w/verif_${FEAT}_${name_exp}.log </code>
-       echo "Implement the verify option ..."
+       #echo "Implement the verify option ..."
+
+        gmm_verify -d $w/$FEAT/ -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates > $w/verif_${FEAT}_${name_exp}.log || exit 1
+        #gmm_verify -d $w/$FEAT/ -e $FEAT -D $w/gmm/$FEAT -E gmm -w world $lists/verif/users.txt $lists/verif/all.test $lists/verif/all.test.candidates > $w/verif_${FEAT}_${name_exp}.log || exit 1
 
    elif [[ $cmd == verif_err ]]; then
        if [[ ! -s $w/verif_${FEAT}_${name_exp}.log ]] ; then

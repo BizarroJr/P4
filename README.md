@@ -115,15 +115,15 @@ La muestra que tiene más información será aquella que tenga las muestras más
   parámetros 2 y 3, y rellene la tabla siguiente con los valores obtenidos.
 
 Ejecutando los comandos:
-
+<code>
 pearson work/lp/BLOCK01/SES017/*.lp
 pearson work/lpcc/BLOCK01/SES017/*.lpcc
 pearson work/mfcc/BLOCK01/SES017/*.mfcc
-
+</code>
 
   |                        | LP       | LPCC        | MFCC 
   |------------------------|:----:    |:----:       |:----:
-  | &rho;<sub>x</sub>[2,3] |-0.872284 | 0.456027   | 0.158673     
+  | &rho;<sub>x</sub>[2,3] |-0.872284 | 0.177135   | 0.073151     
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
