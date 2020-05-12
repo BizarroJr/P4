@@ -32,34 +32,106 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos, y sus opciones, involucrados
   en el *pipeline* principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`).
 
+Para empezar explicaremos que hace cada comando:
+
+sox: sirve para generar una señal del formato adecuado a partir de una señal con otro formato (por ejemplo, WAVE). Indicando como fichero de salida un guion (-) hacemos que sox escriba la salida en la salida estándar. Así, la orden siguiente tiene el mismo resultado que la indicada en al apartado anterior, pero sin la necesidad de generar un fichero en formato crudo.
+
+x2x: es el programa de SPTK que permite la conversión entre distintos formatos de datos.
+
+frame: divide la señal de entrada en tramas de 'x' muestras (1/x ms) con desplazamiento de ventana de 'y' muestras (1/y ms).
+
+window: multiplica cada trama por la ventana de Blackman (opción por defecto).
+
+lpc: Calcula los lpc_order primeros coeficientes de predicción lineal, precedidos por el factor de ganancia del predictor.
+
+En el caso concreto de la práctica tenemos:
+
+<code># Main command for feature extration
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order > $base.lp</code>
+
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros
   de salida de SPTK (líneas 41 a 47 del script `wav2lp.sh`).
 
+
+Lo que se encarga de hacer en la línea de código anterior es:
+
+  sox: El tramo pasa al formato que queremos a partir de un fichero raw y (-e) codifica con el formato signed, además (-b) codifica en 16 bits la muestra que se toma. 
+
+  x2x: En el siguiente tramo (+sf) especifica que el formato de entrada es short y el de salida es float. 
+
+  frame: El siguiente tramo divide la señal de entrada en tramas de 240 muestras (4,17 ms) con desplazamiento de ventana de 80 muestras (12,5 ms). 
+
+  window: El siguiente tramo multiplica por una ventana de Blackman, donde el input tendrá una longitud de 240 muestras y el output también.
+
+  
+  lpc: El último tramo calcula los primeros coeficientes del LPC (dados con $lpc_order), en concreto (-l) especifica  que el factor de ganancia será de 240 y (-m) especifica los coeficientes anteriores.
+
+  El resultado se inyecta en $base.lp
+
+Una vez lo tenemos procedemos a las siguientes línesa que muestran lo siguiente:
+
+<code>
+# Our array files need a header with the number of cols and rows:
+ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`</code>
+
+  En esta líne se construye la matriz donde se almacenan los datos. Cada fila corresponde a una trama de señal, y cada columna a cada uno de los coeficientes con los se parametriza la trama. Cuando se escribe en el fichero, primero se escriben el número de filas y columnas, y luego se escriben los datos.
+
   * ¿Por qué es conveniente usar este formato (u otro parecido)?
+
+??????????????????????????????????????
+
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
+<code>
+sox $inputfile -t raw -e signed -b 16 -| $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $cepstrum_order > $base.lpcc
+</code>
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en
   su fichero <code>scripts/wav2mfcc.sh</code>:
+
+<code>
+sox $inputfile -t raw -e signed -b 16 -| $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$MFC -l 240 -m $mfcc_order -s 16 -n 40 > $base.mfcc
+</code>
 
 ### Extracción de características.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para una señal de prueba.
-  
+
+  <img src="imagenes/coefslp.png" width="640" align="center">
+  <img src="imagenes/coefslpcc.png" width="640" align="center">
+  <img src="imagenes/coefsmfcc.png" width="640" align="center">
+
   + ¿Cuál de ellas le parece que contiene más información?
+
+La muestra que tiene más información será aquella que tenga las muestras más incorreladas. En este caso vemos que en los coeficientes del lp y lpcc las muestras tienden a agruparse en zonas concretas, sin embargo en el mfcc la muestras estan más dispersada y no hay una zona de agrupación tan clara como en los anteriores métodos. Por esto creemos que el mfcc contiene las muestras con más información.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3, y rellene la tabla siguiente con los valores obtenidos.
 
-  |                        | LP   | LPCC | MFCC |
-  |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+Ejecutando los comandos:
+
+pearson work/lp/BLOCK01/SES017/*.lp
+pearson work/lpcc/BLOCK01/SES017/*.lpcc
+pearson work/mfcc/BLOCK01/SES017/*.mfcc
+
+
+  |                        | LP       | LPCC        | MFCC 
+  |------------------------|:----:    |:----:       |:----:
+  | &rho;<sub>x</sub>[2,3] |-0.872284 | 0.456027   | 0.158673     
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
+Los coeficientes obtenidos mediante Pearson tienen su intervalo en [-1,1], y cuanto más cercano a los extremos es este valor obtenido, mayor es su correlación. Del mismo modo cuanto más cercano al 0 es el valor del coeficiente, más incorrelado es. En este sentido vemos que el MFCC es el más cercano al 0, lo cual concuerda con lo visto en el apartado de las gráficas, donde los puntos estaban más dispersos.
+
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+
+De la teoria sabemos que para el habla un número de filtros habitual usado en MFCC es M=40, y en lo que respecta el número de coeficientes este número seria de Q=13.
 
 ### Entrenamiento y visualización de los GMM.
 
