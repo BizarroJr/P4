@@ -115,15 +115,13 @@ La muestra que tiene más información será aquella que tenga las muestras más
   parámetros 2 y 3, y rellene la tabla siguiente con los valores obtenidos.
 
 Ejecutando los comandos:
-<code>
-pearson work/lp/BLOCK01/SES017/*.lp
-pearson work/lpcc/BLOCK01/SES017/*.lpcc
-pearson work/mfcc/BLOCK01/SES017/*.mfcc
-</code>
+<code>pearson work/lp/BLOCK01/SES017/*.lp</code>
+<code>pearson work/lpcc/BLOCK01/SES017/*.lpcc</code>
+<code>pearson work/mfcc/BLOCK01/SES017/*.mfcc</code>
 
   |                        | LP       | LPCC        | MFCC 
   |------------------------|:----:    |:----:       |:----:
-  | &rho;<sub>x</sub>[2,3] |-0.872284 | 0.177135   | 0.073151     
+  | &rho;<sub>x</sub>[2,3] |-0.872284 | 0.177135    | 0.073151     
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
@@ -155,13 +153,11 @@ plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f white 
 
 Con los comandos siguientes obtenemos:
 
-<code>
-plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g blue &
-plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f red -g blue &
-</code>
+<code>plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g blue & </code>
+<code>plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f red -g blue &</code>
 
-  <img src="imagenes/predictedregion.png" width="320" align="right">
-  <img src="imagenes/predictedregion2.png" width="320" align="left">
+  <img src="imagenes/predictedregion.png" width="320" align="center">
+  <img src="imagenes/predictedregion2.png" width="320" align="center">
 
 
 Las imagenes que vemos nos muestran dos locutores distintos, donde a cada uno se le han modelado unos coeficientes distintos, dados por una GMM específica del locutor. En este sentido vemos que ambas tienen una forma parecida, pero estan bastante definidas a cada locutor, con lo cual cuando tengamos que asignar una nueva muestra a algún locutor y se deba calcular la distáncia a cada GMM, probablemente se asigne correctamente al locutor del que proviene, no obstante es importante destacar que siempre existe un margen de error.
@@ -173,6 +169,11 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
 
+|                        | LP       | LPCC        | MFCC 
+|------------------------|:----:    |:----:       |:----:
+|Ratio de pérdidas       | |  |     
+
+
 ### Verificación del locutor.
 
 Complete el código necesario para realizar verificación del locutor y optimice sus parámetros.
@@ -181,6 +182,17 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+
+|                        | LP       | LPCC        | MFCC 
+|------------------------|:----:    |:----:       |:----:
+|Coste de detección      | |  |     
+|------------------------|:----:    |:----:       |:----:
+|Falsa alarma            | |  |    
+|------------------------|:----:    |:----:       |:----:
+|Número de pérdidas      | |  |    
+|------------------------|:----:    |:----:       |:----:
+|Umbral usado (TH)       | |  |  
+
  
 ### Test final y trabajo de ampliación.
 
