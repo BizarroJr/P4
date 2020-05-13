@@ -139,10 +139,32 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
-  
+
+Con el comando siguiente obtenemos:
+
+<code>
+plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f white -g black &
+</code>
+
+  <img src="imagenes/predictedregionnopoints.png" width="640" align="center">
+
+
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+
+Con los comandos siguientes obtenemos:
+
+<code>
+plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g blue &
+plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f red -g blue &
+</code>
+
+  <img src="imagenes/predictedregion.png" width="320" align="right">
+  <img src="imagenes/predictedregion2.png" width="320" align="left">
+
+
+Las imagenes que vemos nos muestran dos locutores distintos, donde a cada uno se le han modelado unos coeficientes distintos, dados por una GMM específica del locutor. En este sentido vemos que ambas tienen una forma parecida, pero estan bastante definidas a cada locutor, con lo cual cuando tengamos que asignar una nueva muestra a algún locutor y se deba calcular la distáncia a cada GMM, probablemente se asigne correctamente al locutor del que proviene, no obstante es importante destacar que siempre existe un margen de error.
 
 ### Reconocimiento del locutor.
 

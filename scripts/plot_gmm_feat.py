@@ -2,6 +2,8 @@
 
 import struct
 
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from docopt import docopt
@@ -119,8 +121,8 @@ def plotGMM(fileGMM, xDim, yDim, percents, colorGmm, filesFeat=None, colorFeat=N
 
     numSmp = np.ceil(np.max(1000 / (percents * (1 - percents))) ** 0.5)
 
-    x = np.linspace(min_[0], max_[0], numSmp)
-    y = np.linspace(min_[1], max_[1], numSmp)
+    x = np.linspace(min_[0], max_[0], int(numSmp))
+    y = np.linspace(min_[1], max_[1], int(numSmp))
     X, Y = np.meshgrid(x, y)
 
     XX = np.array([X.ravel(), Y.ravel()]).T
