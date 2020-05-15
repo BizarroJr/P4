@@ -79,7 +79,7 @@ nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`</code>
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)?
 
-??????????????????????????????????????
+Primero de todo, al tener primero los índices (como será de grande la matriz) "enventana" la cantidad de señal que nos llegará, consiguiendo así las tramas concretas. Usar una matriz también ayuda a tener correlada la información sabiendo que una trama de señal tendrá los coeficientes con los que se parametriza seguidos para conseguir mejores valores de correlación. Se podría hacer con dos vectores independientes, mas ellos no nos aseguran la correlación de datos como una matriz.
 
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
@@ -115,8 +115,11 @@ La muestra que tiene más información será aquella que tenga las muestras más
   parámetros 2 y 3, y rellene la tabla siguiente con los valores obtenidos.
 
 Ejecutando los comandos:
+
 <code>pearson work/lp/BLOCK01/SES017/*.lp</code>
+-
 <code>pearson work/lpcc/BLOCK01/SES017/*.lpcc</code>
+-
 <code>pearson work/mfcc/BLOCK01/SES017/*.mfcc</code>
 
   |                        | LP       | LPCC        | MFCC 
@@ -129,7 +132,7 @@ Los coeficientes obtenidos mediante Pearson tienen su intervalo en [-1,1], y cua
 
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 
-De la teoria sabemos que para el habla un número de filtros habitual usado en MFCC es M=40, y en lo que respecta el número de coeficientes este número seria de Q=13.
+De la teoria sabemos que para el habla un número de filtros habitual usado en MFCC es de M=20 a M=40, y en lo que respecta el número de coeficientes este número seria de Q=13.
 
 ### Entrenamiento y visualización de los GMM.
 
@@ -154,9 +157,11 @@ plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f white 
 Con los comandos siguientes obtenemos:
 
 <code>plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g blue & </code>
+-
 <code>plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f red -g blue &</code>
 
   <img src="imagenes/predictedregion.png" width="320" align="center">
+
   <img src="imagenes/predictedregion2.png" width="320" align="center">
 
 
@@ -171,8 +176,13 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 |                        | LP       | LPCC        | MFCC 
 |------------------------|:----:    |:----:       |:----:
-|Ratio de pérdidas       | |  |     
+|Ratio de pérdidas       |8.66%     |1.40%        |4.59%     
 
+Los parámetros usados han sido:
+
+Lp: 15 coeficientes
+Lpcc: 20 coeficientes, 20 c.cepstrales
+Mfcc: 13 coeficientes
 
 ### Verificación del locutor.
 
@@ -185,13 +195,10 @@ Complete el código necesario para realizar verificación del locutor y optimice
 
 |                        | LP       | LPCC        | MFCC 
 |------------------------|:----:    |:----:       |:----:
-|Coste de detección      | |  |     
-|------------------------|:----:    |:----:       |:----:
-|Falsa alarma            | |  |    
-|------------------------|:----:    |:----:       |:----:
-|Número de pérdidas      | |  |    
-|------------------------|:----:    |:----:       |:----:
-|Umbral usado (TH)       | |  |  
+|Coste de detección      |          |             |     
+|Falsa alarma            |          |             |    
+|Número de pérdidas      |          |             |    
+|Umbral usado (TH)       |          |             |  
 
  
 ### Test final y trabajo de ampliación.
