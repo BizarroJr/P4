@@ -79,7 +79,7 @@ nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`</code>
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)?
 
-Primmero de todo, al tener primero los índices (como será de grande la matriz) "enventana" la cantidad de señal que nos llegará, consiguiendo así las tramas concretas. Usar una matriz también ayuda a tener correlada la información sabiendo que una trama de señal tendrá los coeficientes con los que se parametriza seguidos para conseguir mejores valores de correlación. Se podría hacer con dos vectores independientes, mas ellos no nos aseguran la correlación de datos como una matriz.
+Primero de todo, tener los índices (como será de grande la matriz) "enventana" la cantidad de señal que nos llegará, consiguiendo así las tramas concretas. Usar una matriz también ayuda a tener correlada la información sabiendo que una trama de señal tendrá los coeficientes con los que se parametriza seguidos para conseguir mejores valores de correlación. Se podría hacer con dos vectores independientes, mas ellos no nos aseguran la correlación de datos como una matriz.
 
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
@@ -116,11 +116,9 @@ La muestra que tiene más información será aquella que tenga las muestras más
 
 Ejecutando los comandos:
 
-<code>pearson work/lp/BLOCK01/SES017/*.lp</code>
--
-<code>pearson work/lpcc/BLOCK01/SES017/*.lpcc</code>
--
-<code>pearson work/mfcc/BLOCK01/SES017/*.mfcc</code>
+1)<code>pearson work/lp/BLOCK01/SES017/*.lp</code>
+2)<code>pearson work/lpcc/BLOCK01/SES017/*.lpcc</code>
+3)<code>pearson work/mfcc/BLOCK01/SES017/*.mfcc</code>
 
   |                        | LP       | LPCC        | MFCC 
   |------------------------|:----:    |:----:       |:----:
@@ -131,6 +129,14 @@ Ejecutando los comandos:
 Los coeficientes obtenidos mediante Pearson tienen su intervalo en [-1,1], y cuanto más cercano a los extremos es este valor obtenido, mayor es su correlación. Del mismo modo cuanto más cercano al 0 es el valor del coeficiente, más incorrelado es. En este sentido vemos que el MFCC es el más cercano al 0, lo cual concuerda con lo visto en el apartado de las gráficas, donde los puntos estaban más dispersos.
 
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+
+LPCC)
+  a) (-m) el número de coeficientes de la predicción lineal
+  b) (-M) el número de coeficientes cepstrales
+MFCC)
+  a) (-m) el número de coeficientes de la predicción lineal
+  b) (-n) el número de filtros en la escala MEL
+  c) (-s) la frecuencia de muestreo
 
 De la teoria sabemos que para el habla un número de filtros habitual usado en MFCC es de M=20 a M=40, y en lo que respecta el número de coeficientes este número seria de Q=13.
 
@@ -156,9 +162,8 @@ plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f white 
 
 Con los comandos siguientes obtenemos:
 
-<code>plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g blue & </code>
--
-<code>plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f red -g blue &</code>
+1)<code>plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g blue & </code>
+2)<code>plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f red -g blue &</code>
 
   <img src="imagenes/predictedregion.png" width="320" align="center">
 
@@ -184,6 +189,13 @@ Lp: 15 coeficientes
 Lpcc: 20 coeficientes, 20 c.cepstrales
 Mfcc: 13 coeficientes
 
+En el GMM:
+
+Threshold=0.0001 
+Iteraciones=40 
+Gaussianas=100
+Método de inicialización=VQ
+
 ### Verificación del locutor.
 
 Complete el código necesario para realizar verificación del locutor y optimice sus parámetros.
@@ -193,14 +205,33 @@ Complete el código necesario para realizar verificación del locutor y optimice
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
 
-|                        | LP       | LPCC        | MFCC 
-|------------------------|:----:    |:----:       |:----:
-|Coste de detección      |          |             |     
-|Falsa alarma            |          |             |    
-|Número de pérdidas      |          |             |    
-|Umbral usado (TH)       |          |             |  
+|                        | LP           | LPCC        | MFCC 
+|------------------------|:----:        |:----:       |:----:
+|Coste de detección      |61.9          |17.1         |75.0    
+|Número de falsas alarmas|1/1000=0.0010 |1/1000=0.0010|138/250=0.5520    
+|Número de pérdidas      |130/250=0.5200|18/250=0.0720|2/1000=0.0020   
+|Umbral usado (TH)       |2.60669       |0.16192      |1.98419  
 
- 
+Los parámetros usados han sido:
+
+Lp: 15 coeficientes
+Lpcc: 20 coeficientes, 20 c.cepstrales
+Mfcc: 13 coeficientes
+
+En el GMM:
+
+Threshold=0.0001 
+Iteraciones=40 
+Gaussianas=100
+Método de inicialización=VQ
+
+En el Trainworld:
+
+Threshold=0.0001 
+Iteraciones=50 
+Gaussianas=20
+Método de inicialización=VQ
+
 ### Test final y trabajo de ampliación.
 
 - Recuerde adjuntar los ficheros `class_test.log` y `verif_test.log` correspondientes a la evaluación
