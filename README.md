@@ -75,12 +75,16 @@ Una vez lo tenemos procedemos a las siguientes línesa que muestran lo siguiente
 ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
 nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`</code>
 
-  En esta líne se construye la matriz donde se almacenan los datos. Cada fila corresponde a una trama de señal, y cada columna a cada uno de los coeficientes con los se parametriza la trama. Cuando se escribe en el fichero, primero se escriben el número de filas y columnas, y luego se escriben los datos.
+  En esta líne se construye la matriz donde se almacenan los datos. Cada fila corresponde a una trama de señal, y cada columna a cada 
+  uno de los coeficientes con los se parametriza la trama. Cuando se escribe en el fichero, primero se escriben el número de filas y 
+  columnas, y luego se escriben los datos.
 
   * ¿Por qué es conveniente usar este formato (u otro parecido)?
 
-??????????????????????????????????????
-
+Primmero de todo, al tener primero los índices (como será de grande la matriz) "enventana" la cantidad de señal que nos llegará, 
+consiguiendo así las tramas concretas. Usar una matriz también ayuda a tener correlada la información sabiendo que una trama de
+señal tendrá los coeficientes con los que se parametriza seguidos para conseguir mejores valores de correlación. Se podría hacer
+con dos vectores independientes, mas ellos no nos aseguran la correlación de datos como una matriz.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
