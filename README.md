@@ -116,9 +116,9 @@ La muestra que tiene más información será aquella que tenga las muestras más
 
 Ejecutando los comandos:
 
-1)<code>pearson work/lp/BLOCK01/SES017/*.lp</code>
-2)<code>pearson work/lpcc/BLOCK01/SES017/*.lpcc</code>
-3)<code>pearson work/mfcc/BLOCK01/SES017/*.mfcc</code>
+1)<code>pearson work/lp/BLOCK01/SES017/*.lp</code><br/>
+2)<code>pearson work/lpcc/BLOCK01/SES017/*.lpcc</code><br/>
+3)<code>pearson work/mfcc/BLOCK01/SES017/*.mfcc</code><br/>
 
   |                        | LP       | LPCC        | MFCC 
   |------------------------|:----:    |:----:       |:----:
@@ -162,15 +162,15 @@ plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f white 
 
 Con los comandos siguientes obtenemos:
 
-1)<code>plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g blue & </code>
-2)<code>plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f red -g blue &</code>
+1)<code>plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g red & </code><br/>
+2)<code>plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f blue -g blue &</code><br/>
+3)<code>plot_gmm_feat work/gmm/mfcc/SES020.gmm work/mfcc/BLOCK27/SES272/*.mfcc -f blue -g red &</code><br/>
+4)<code>plot_gmm_feat work/gmm/mfcc/SES272.gmm work/mfcc/BLOCK02/SES020/*.mfcc -f red -g blue &</code><br/>
 
-  <img src="imagenes/predictedregion.png" width="320" align="center">
+  <img src="imagenes/gaus1.png" width="320" align="center"> <img src="imagenes/gaus4.png" width="320" align="center"><br/>
+  <img src="imagenes/gaus3.png" width="320" align="center"> <img src="imagenes/gaus2.png" width="320" align="center">
 
-  <img src="imagenes/predictedregion2.png" width="320" align="center">
-
-
-Las imagenes que vemos nos muestran dos locutores distintos, donde a cada uno se le han modelado unos coeficientes distintos, dados por una GMM específica del locutor. En este sentido vemos que ambas tienen una forma parecida, pero estan bastante definidas a cada locutor, con lo cual cuando tengamos que asignar una nueva muestra a algún locutor y se deba calcular la distáncia a cada GMM, probablemente se asigne correctamente al locutor del que proviene, no obstante es importante destacar que siempre existe un margen de error.
+Las imagenes que vemos nos muestran dos locutores distintos, donde a cada uno se le han modelado unos coeficientes distintos, dados por una GMM específica del locutor. En este sentido vemos que ambas tienen una forma parecida, por lo que es probable que a la hora de decidir una nueva muestra a que locutor corresponde, haya confusión. Quizá otro modelo de ejemplo habría sido mejor para ver realmente la capacidad para diferenciar las señales de uno y otro.
 
 ### Reconocimiento del locutor.
 
@@ -236,10 +236,13 @@ Conclusión:
 
 Destacamos que si bien el LPCC da unos resultados excelentes, vemos que el coste de LP como de MFCC es razonablemente alto. Se han intentado ajustar los parámetros minimizando el error, por lo que el resto de elementos pueden haber salido perjudicados. En general, las ejecuciones han tardado unos 20-30 minutos en media, aunque hemos podido comprobar que bajando el número de gaussianas del train de 100 a 60, esto era bastante más ágil en cuanto a tiempo de ejecución, con unos resultados más o menos iguales en cuanto a error (variación del 2%) y en lo que se refiere al coste los resultados eran completamente idénticos.
 
+
 ### Test final y trabajo de ampliación.
 
 - Recuerde adjuntar los ficheros `class_test.log` y `verif_test.log` correspondientes a la evaluación
   *ciega* final.
+
+Se ha añadido una aplicación más al run_spkid, featuresEval, con la cual usamos el lpcc puesto que ha sido el mejor de los sistemas, para obtener la evaluación de características para la base de datos a evaluar.
 
 - Recuerde, también, enviar a Atenea un fichero en formato zip o tgz con la memoria con el trabajo
   realizado como ampliación, así como los ficheros `class_ampl.log` y/o `verif_ampl.log`, obtenidos como

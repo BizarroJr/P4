@@ -210,6 +210,7 @@ for cmd in $*; do
    elif [[ $cmd == finalclass ]]; then
        ## @file
 	   # \TODO
+       # \HECHO
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
@@ -220,6 +221,7 @@ for cmd in $*; do
    elif [[ $cmd == finalverif ]]; then
        ## @file
 	   # \TODO
+       # \HECHO
 	   # Perform the final test on the speaker verification of the files in spk_ima/sr_test/spk_ver.
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
