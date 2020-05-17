@@ -208,8 +208,8 @@ Complete el código necesario para realizar verificación del locutor y optimice
 |                        | LP           | LPCC        | MFCC 
 |------------------------|:----:        |:----:       |:----:
 |Coste de detección      |61.9          |17.1         |75.0    
-|Número de falsas alarmas|1/1000=0.0010 |1/1000=0.0010|138/250=0.5520    
-|Número de pérdidas      |130/250=0.5200|18/250=0.0720|2/1000=0.0020   
+|Número de falsas alarmas|1/1000=0.0010 |1/1000=0.0010|2/1000=0.0020   
+|Número de pérdidas      |130/250=0.5200|18/250=0.0720|138/250=0.5520   
 |Umbral usado (TH)       |2.60669       |0.16192      |1.98419  
 
 Los parámetros usados han sido:
@@ -231,6 +231,10 @@ Threshold=0.0001
 Iteraciones=50 
 Gaussianas=20
 Método de inicialización=VQ
+
+Conclusión:
+
+Destacamos que si bien el LPCC da unos resultados excelentes, vemos que el coste de LP como de MFCC es razonablemente alto. Se han intentado ajustar los parámetros minimizando el error, por lo que el resto de elementos pueden haber salido perjudicados. En general, las ejecuciones han tardado unos 20-30 minutos en media, aunque hemos podido comprobar que bajando el número de gaussianas del train de 100 a 60, esto era bastante más ágil en cuanto a tiempo de ejecución, con unos resultados más o menos iguales en cuanto a error (variación del 2%) y en lo que se refiere al coste los resultados eran completamente idénticos.
 
 ### Test final y trabajo de ampliación.
 
