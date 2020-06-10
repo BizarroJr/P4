@@ -14,15 +14,18 @@ cleanup() {
    \rm -f $base.*
 }
 
-if [[ $# != 4 ]]; then
-   echo "$0 lpc_order cepstrum_order input.wav output.lpcc"
+if [[ $# != 7 ]]; then
+   echo "$0 lpc_order cepstrum_order longitud periodo_frame tipo_ventana input.wav output.lpcc"
    exit 1
 fi
 
 lpc_order=$1
 cepstrum_order=$2
-inputfile=$3
-outputfile=$4
+longitud=$3
+periodo_frame=$4
+tipo_ventana=$5
+inputfile=$6
+outputfile=$7
 
 UBUNTU_SPTK=1
 if [[ $UBUNTU_SPTK == 1 ]]; then
@@ -42,8 +45,8 @@ else
 fi
 
 # Main command for feature extration
-sox $inputfile -t raw -e signed -b 16 -| $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
-	$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $cepstrum_order > $base.lpcc
+sox $inputfile -t raw -e signed -b 16 -| $X2X +sf | $FRAME -l $longitud -p 80 | $WINDOW -l $longitud -L $longitud -w $tipo_ventana|
+	$LPC -l $longitud -m $lpc_order | $LPCC -m $lpc_order -M $cepstrum_order > $base.lpcc
 
 # Our array files need a header with the number of cols and rows:
 ncol=$((lpc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 

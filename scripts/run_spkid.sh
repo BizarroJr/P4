@@ -89,7 +89,7 @@ fi
 compute_lp() {
     for filename in $(cat $lists/class/all.train $lists/class/all.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2lp 15 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2lp 15 240 80 0 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -97,7 +97,7 @@ compute_lp() {
 compute_lpcc() {
     for filename in $(cat $lists/class/all.train $lists/class/all.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2lpcc 20 20 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2lpcc 20 20 240 80 0 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
@@ -141,7 +141,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 0.0001 -N 40 -m 100 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 0.0001 -N 40 -m 65 -i 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then
@@ -168,7 +168,7 @@ for cmd in $*; do
 	   # - The name of the world model will be used by gmm_verify in the 'verify' command below.
        # echo "Implement the trainworld option ..."
 
-        gmm_train  -v 1 -T 0.0001 -N 50 -m 20 -i 1 -e $FEAT -d $w/$FEAT -g $w/gmm/$FEAT/world.gmm $lists/verif/users_and_others.train  || exit 1
+        gmm_train  -v 1 -T 0.0001 -N 15 -m 45 -i 1 -e $FEAT -d $w/$FEAT -g $w/gmm/$FEAT/world.gmm $lists/verif/users_and_others.train  || exit 1
 
    elif [[ $cmd == verify ]]; then
        ## @file
@@ -207,6 +207,18 @@ for cmd in $*; do
             echo $EXEC && $EXEC 
         done
 
+    elif [[ $cmd == featuresEval2 ]]; then
+        for filename in $(cat $lists/final/class.test); do
+            mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
+            EXEC="wav2lpcc 20 20 240 80 0 $db2/$filename.wav $w/$FEAT/$filename.$FEAT"
+            echo $EXEC && $EXEC || exit 1
+        done
+        for filename in $(cat $lists/final/verif.test); do
+            mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
+            EXEC="wav2lpcc 20 20 240 80 0 $db2/$filename.wav $w/$FEAT/$filename.$FEAT"
+            echo $EXEC && $EXEC || exit 1
+        done
+
    elif [[ $cmd == finalclass ]]; then
        ## @file
 	   # \TODO
@@ -216,7 +228,10 @@ for cmd in $*; do
 	   # recognized is lists/final/class.test
        #echo "To be implemented ..."
 
-        (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee class_test.log) || exit 1
+        #Parte básica:
+        #(gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee class_test.log) || exit 1
+        #Parte ampliada:
+        (gmm_classify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee class_ampli.log) || exit 1
 
    elif [[ $cmd == finalverif ]]; then
        ## @file
@@ -230,9 +245,14 @@ for cmd in $*; do
 
         gmm_verify -d $w/$FEAT/ -e $FEAT -D $w/gmm/$FEAT -w world -E gmm $lists/gmm.list $lists/final/verif.test $lists/final/verif.test.candidates | tee verification.log
 
+        #Parte básica:
+        #perl -ane 'print "$F[0]\t$F[1]\t";
+        #    if ($F[2] > 0.161915177169203) {print "1\n"}
+        #    else {print "0\n"}' verification.log > verif_test.log
+        #Parte ampliada:
         perl -ane 'print "$F[0]\t$F[1]\t";
-            if ($F[2] > 0.161915177169203) {print "1\n"}
-            else {print "0\n"}' verification.log > verif_test.log
+            if ($F[2] > -0.0798850973014031) {print "1\n"}
+            else {print "0\n"}' verification.log > verif_ampli.log
 
    # If the command is not recognize, check if it is the name
    # of a feature and a compute_$FEAT function exists.

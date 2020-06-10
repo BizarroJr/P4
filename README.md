@@ -244,6 +244,12 @@ Destacamos que si bien el LPCC da unos resultados excelentes, vemos que el coste
 
 Se ha añadido una aplicación más al run_spkid, featuresEval, con la cual usamos el lpcc puesto que ha sido el mejor de los sistemas, para obtener la evaluación de características para la base de datos a evaluar.
 
+FEAT=lpcc run_spkid featuresEval finalclass finalverif
+
+Ampli:
+
+FEAT=lpcc run_spkid featuresEval2 finalclass finalverif
+
 - Recuerde, también, enviar a Atenea un fichero en formato zip o tgz con la memoria con el trabajo
   realizado como ampliación, así como los ficheros `class_ampl.log` y/o `verif_ampl.log`, obtenidos como
   resultado del mismo.
